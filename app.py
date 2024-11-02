@@ -33,115 +33,126 @@ data_choice = st.sidebar.selectbox("Choose dataset to view",
                                    ["Visitor Arrivals", "Tourist Expenditure", "Weather Patterns",
                                     "Economic Indicators"])
 
-st.header("Overall Data - 2010 to 2015")
-st.dataframe(overall_df, use_container_width=True, hide_index=True)
-
-# Create a Plotly figure for visitor arrivals and expenditure
-fig = go.Figure()
-
-# Add bar trace for the number of visitors
-fig.add_trace(go.Bar(
-    x=overall_df['Year'],
-    y=overall_df['Number of Visitors (in millions)'],
-    name='Number of Visitors',
-    marker_color='skyblue',
-    yaxis='y1'  # Use the first y-axis
-))
-
-# Add line trace for the expenditure
-fig.add_trace(go.Scatter(
-    x=overall_df['Year'],
-    y=overall_df['Expenditure (in billion THB)'],
-    mode='lines+markers',
-    name='Expenditure',
-    line=dict(color='orange', width=2),
-    marker=dict(size=8),
-    yaxis='y2'  # Use the second y-axis
-))
-
-# Update layout for dual axes
-fig.update_layout(
-    title='Overall Visitor Arrivals and Expenditure Over the Years',
-    xaxis_title='Year',
-    yaxis_title='Number of Visitors (in millions)',
-    yaxis=dict(
-        title='Number of Visitors (in millions)',
-        side='left',
-        showgrid=True,
-        zeroline=False,
-        titlefont=dict(color='skyblue'),
-        tickfont=dict(color='skyblue')
-    ),
-    yaxis2=dict(
-        title='Expenditure (in billion THB)',
-        overlaying='y',
-        side='right',
-        showgrid=False,
-        zeroline=False,
-        titlefont=dict(color='orange'),
-        tickfont=dict(color='orange')
-    ),
-    xaxis=dict(tickvals=overall_df['Year']),  # Ensure all years are shown
-    template='plotly_white',  # A clean white background
-    hovermode='x unified'  # Show hover info for all traces at the same x-value
-)
-
-# Show the figure in Streamlit
-st.plotly_chart(fig, use_container_width=True)
-
 if data_choice == "Visitor Arrivals":
-    st.header("Visitor Arrivals")
+    st.header("Overall Data - 2010 to 2015")
+    st.dataframe(overall_df, use_container_width=True, hide_index=True)
+    st.header("Visitor Arrivals By Country - 2010 to 2015")
     st.dataframe(visitors_df, use_container_width=True, hide_index=True)
+    # Overall Data Chart for Visitor Arrivals
+    overall_df = overall_df.groupby('Year')[
+        ['Number of Visitors (in millions)', 'Expenditure (in billion THB)']].sum().reset_index()
+
+    # Ensure years are integers
+    overall_df['Year'] = overall_df['Year'].astype(int)
+
+    # Create a Plotly figure for visitor arrivals
+    fig = go.Figure()
+
+    # Add a line trace for the visitor arrivals
+    fig.add_trace(go.Scatter(
+        x=overall_df['Year'],
+        y=overall_df['Number of Visitors (in millions)'],
+        mode='lines+markers',
+        name='Number of Visitors',
+        line=dict(color='skyblue', width=2),
+        marker=dict(size=8)
+    ))
+
+    # Customize the layout
+    fig.update_layout(
+        title='Overall Visitor Arrivals Over the Years',
+        xaxis_title='Year',
+        yaxis_title='Number of Visitors (in millions)',
+        xaxis=dict(tickvals=overall_df['Year']),  # Ensure all years are shown
+        yaxis=dict(range=[0, overall_df['Number of Visitors (in millions)'].max() * 1.1]),
+        template='plotly_white',  # A clean white background
+        hovermode='x unified'  # Show hover info for all traces at the same x-value
+    )
+
+    # Show the figure in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
 elif data_choice == "Tourist Expenditure":
-    st.header("Tourist Expenditure")
+    st.header("Overall Data - 2010 to 2015")
+    st.dataframe(overall_df, use_container_width=True, hide_index=True)
+    st.header("Tourist Expenditure - 2010 to 2015")
     st.dataframe(expenditure_df, use_container_width=True, hide_index=True)
+    # Overall Data Chart for Expenditure
+    # Ensure the overall_df DataFrame has the correct structure before this line
+    # This part has been updated to reflect the changes to the previous grouping
+    fig = go.Figure()
+
+    # Add a line trace for the expenditure
+    fig.add_trace(go.Scatter(
+        x=overall_df['Year'],
+        y=overall_df['Expenditure (in billion THB)'],
+        mode='lines+markers',
+        name='Expenditure',
+        line=dict(color='orange', width=2),
+        marker=dict(size=8)
+    ))
+
+    # Customize the layout for expenditure
+    fig.update_layout(
+        title='Overall Expenditure Over the Years',
+        xaxis_title='Year',
+        yaxis_title='Expenditure (in billion THB)',
+        xaxis=dict(tickvals=overall_df['Year']),  # Ensure all years are shown
+        yaxis=dict(range=[0, overall_df['Expenditure (in billion THB)'].max() * 1.1]),
+        template='plotly_white',  # A clean white background
+        hovermode='x unified'  # Show hover info for all traces at the same x-value
+    )
+
+    # Show the figure in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
 elif data_choice == "Weather Patterns":
     st.header("Weather Patterns")
     st.dataframe(weather_df, use_container_width=True, hide_index=True)
-    # Create a Plotly figure for visitor arrivals and expenditure
+
     fig = go.Figure()
 
-    # Add bar trace for the number of visitors
-    fig.add_trace(go.Bar(
-        x=weather_df['Year'],
-        y=weather_df['Average Temperature (°C)'],
-        name='Average Temperature',
-        marker_color='orange',
-        yaxis='y1'  # Use the first y-axis
-    ))
-
-    # Add line trace for the expenditure
+    # Add Average Temperature trace as a line
     fig.add_trace(go.Scatter(
         x=weather_df['Year'],
-        y=weather_df['Rainfall (mm)'],
+        y=weather_df['Average Temperature (°C)'],
         mode='lines+markers',
-        name='Rainfall',
-        line=dict(color='skyblue', width=2),
+        name='Average Temperature',
+        line=dict(color='orange', width=2),  # Line color set to orange
         marker=dict(size=8),
         yaxis='y2'  # Use the second y-axis
+    ))
+
+    # Add Rainfall trace as bars
+    fig.add_trace(go.Bar(
+        x=weather_df['Year'],
+        y=weather_df['Rainfall (mm)'],
+        name='Rainfall',
+        marker_color='skyblue',
+        yaxis='y1'  # Use the first y-axis
     ))
 
     # Update layout for dual axes
     fig.update_layout(
         title='Weather Patterns Over the Years',
         xaxis_title='Year',
-        yaxis_title='Average Temperature (°C)',
+        yaxis_title='Rainfall (mm)',  # Update the primary y-axis title
         yaxis=dict(
-            title='Average Temperature (°C)',
+            title='Rainfall (mm)',  # Title for the primary y-axis
             side='left',
             showgrid=True,
             zeroline=False,
-            titlefont=dict(color='orange'),
-            tickfont=dict(color='orange')
+            titlefont=dict(color='skyblue'),  # Title font color
+            tickfont=dict(color='skyblue')  # Tick font color
         ),
         yaxis2=dict(
-            title='Rainfall (mm)',
+            title='Average Temperature (°C)',  # Title for the secondary y-axis
             overlaying='y',
             side='right',
             showgrid=False,
             zeroline=False,
-            titlefont=dict(color='skyblue'),
-            tickfont=dict(color='skyblue')
+            titlefont=dict(color='orange'),  # Title font color for temperature
+            tickfont=dict(color='orange')  # Tick font color for temperature
         ),
         xaxis=dict(tickvals=weather_df['Year']),  # Ensure all years are shown
         template='plotly_white',  # A clean white background
@@ -150,12 +161,10 @@ elif data_choice == "Weather Patterns":
 
     # Show the figure in Streamlit
     st.plotly_chart(fig, use_container_width=True)
+
 else:
     st.header("Economic Indicators")
     st.dataframe(economic_df, use_container_width=True, hide_index=True)
-
-# Data Preparation and Visualization
-st.header("Data Analysis and Preparation")
 
 # Convert 'Visitors (in thousands)' to numeric, forcing non-numeric values to NaN
 visitors_df['Visitors (in thousands)'] = pd.to_numeric(visitors_df['Visitors (in thousands)'], errors='coerce')
@@ -184,9 +193,6 @@ data = pd.DataFrame({
     'Rainfall (mm)': weather_df['Rainfall (mm)'],
     'GDP Growth (%)': economic_df['GDP Growth (%)']
 })
-
-st.write("Combined Dataset")
-st.write(data)
 
 # Model Training
 st.header("Visitor Arrivals Prediction")
