@@ -1,16 +1,9 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from matplotlib import pyplot as plt
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
-from statsmodels.tsa.arima.model import ARIMA
 
 # Set up the page
 st.set_page_config(page_title="WaveTour Pro - Tourism Predictor", layout="wide")
-header_image = 'images/wavetour-header.png'  # Replace with your image file path or URL
-st.image(header_image, use_column_width=True)
-
 
 # Load Data
 @st.cache_data
@@ -30,10 +23,12 @@ st.sidebar.header("Data Preview")
 visitors_df, expenditure_df, weather_df, economic_df, overall_df = load_data()
 
 data_choice = st.sidebar.selectbox("Choose dataset to view",
-                                   ["Visitor Arrivals", "Tourist Expenditure", "Weather Patterns",
+                                   ["Visitor Arrivals", "Tourist Expenditures", "Weather Patterns",
                                     "Economic Indicators"])
 
 if data_choice == "Visitor Arrivals":
+    header_image = 'images/visitor-arrivals-header.png'  # Replace with your image file path or URL
+    st.image(header_image, use_column_width=True)
     st.header("Overall Data (2010-2015)")
     st.dataframe(overall_df, use_container_width=True, hide_index=True)
     st.header("Visitor Arrivals By Country (2010-2015)")
@@ -350,10 +345,12 @@ if data_choice == "Visitor Arrivals":
     # Show the accommodation types figure in Streamlit
     st.plotly_chart(fig_accommodation, use_container_width=True)
 
-elif data_choice == "Tourist Expenditure":
+elif data_choice == "Tourist Expenditures":
+    header_image = 'images/expenditure-header.png'  # Replace with your image file path or URL
+    st.image(header_image, use_column_width=True)
     st.header("Overall Data (2010-2015)")
     st.dataframe(overall_df, use_container_width=True, hide_index=True)
-    st.header("Tourist Expenditure (2010-2015)")
+    st.header("Tourist Expenditures (2010-2015)")
     st.dataframe(expenditure_df, use_container_width=True, hide_index=True)
     # Overall Data Chart for Expenditure
     # Ensure the overall_df DataFrame has the correct structure before this line
@@ -452,6 +449,8 @@ elif data_choice == "Tourist Expenditure":
     st.plotly_chart(fig_stacked, use_container_width=True)
 
 elif data_choice == "Weather Patterns":
+    header_image = 'images/weathers-header.png'  # Replace with your image file path or URL
+    st.image(header_image, use_column_width=True)
     st.header("Weather Patterns")
     st.dataframe(weather_df, use_container_width=True, hide_index=True)
 
@@ -508,6 +507,8 @@ elif data_choice == "Weather Patterns":
     st.plotly_chart(fig, use_container_width=True)
 
 else:
+    header_image = 'images/economics-header.png'  # Replace with your image file path or URL
+    st.image(header_image, use_column_width=True)
     st.header("Economic Indicators")
     st.dataframe(economic_df, use_container_width=True, hide_index=True)
 
