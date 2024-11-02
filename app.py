@@ -508,6 +508,66 @@ else:
     st.header("Economic Indicators")
     st.dataframe(economic_df, use_container_width=True, hide_index=True)
 
+    data = {
+        'Year': [2010, 2011, 2012, 2013, 2014, 2015],
+        'GDP Growth (%)': [-5, 9.6, 15.8, 14, -2.7, 15.8],
+        'Employment in Tourism (%)': [11.5, 11.3, 13.1, 14.9, 12.9, 14.6]
+    }
+
+    # Create DataFrame
+    df = pd.DataFrame(data)
+
+    # Create the figure
+    fig = go.Figure()
+
+    # Add GDP Growth line
+    fig.add_trace(go.Scatter(
+        x=df['Year'],
+        y=df['GDP Growth (%)'],
+        mode='lines+markers',
+        name='GDP Growth (%)',
+        line=dict(color='orange', width=2),
+        marker=dict(size=8)
+    ))
+
+    # Add Employment in Tourism bar
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Employment in Tourism (%)'],
+        name='Employment in Tourism (%)',
+        marker_color='skyblue'
+    ))
+
+    # Update layout for dual axes
+    fig.update_layout(
+        title='GDP Growth and Employment in Tourism Over the Years',
+        xaxis_title='Year',
+        yaxis_title='GDP Growth (%)',
+        yaxis=dict(
+            title='GDP Growth (%)',
+            side='left',
+            showgrid=True,
+            zeroline=False,
+            titlefont=dict(color='orange'),
+            tickfont=dict(color='orange')
+        ),
+        yaxis2=dict(
+            title='Employment in Tourism (%)',
+            overlaying='y',
+            side='right',
+            showgrid=False,
+            zeroline=False,
+            titlefont=dict(color='skyblue'),
+            tickfont=dict(color='skyblue')
+        ),
+        xaxis=dict(tickvals=df['Year']),  # Ensure all years are shown
+        template='plotly_white',  # A clean white background
+        hovermode='x unified'  # Show hover info for all traces at the same x-value
+    )
+
+    # Show the figure in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
 # Convert 'Visitors (in thousands)' to numeric, forcing non-numeric values to NaN
 visitors_df['Visitors (in thousands)'] = pd.to_numeric(visitors_df['Visitors (in thousands)'], errors='coerce')
 
