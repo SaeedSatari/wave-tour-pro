@@ -1,10 +1,6 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from matplotlib import pyplot as plt
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
-from statsmodels.tsa.arima.model import ARIMA
 
 # Set up the page
 st.set_page_config(page_title="WaveTour Pro - Tourism Predictor", layout="wide")
@@ -34,9 +30,9 @@ data_choice = st.sidebar.selectbox("Choose dataset to view",
                                     "Economic Indicators"])
 
 if data_choice == "Visitor Arrivals":
-    st.header("Overall Data - 2010 to 2015")
+    st.header("Overall Data (2010-2015)")
     st.dataframe(overall_df, use_container_width=True, hide_index=True)
-    st.header("Visitor Arrivals By Country - 2010 to 2015")
+    st.header("Visitor Arrivals By Country (2010-2015)")
     st.dataframe(visitors_df, use_container_width=True, hide_index=True)
     # Overall Data Chart for Visitor Arrivals
     overall_df = overall_df.groupby('Year')[
@@ -72,10 +68,288 @@ if data_choice == "Visitor Arrivals":
     # Show the figure in Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
+    data = {
+        "Year": [2011, 2012, 2013, 2014, 2015],
+        "Total": [19230470, 22353903, 26546725, 24809683, 29923185],
+        "Holiday": [8992983, 19284120, 23240400, 21638826, 26611845],
+        "Meeting": [3042564, 559804, 600664, 544216, 646244],
+        "Incentive": [2851527, 36058, 70741, 70445, 63753],
+        "Convention": [2395588, 99728, 73328, 65982, 92936],
+        "Exhibitions": [92228, 40471, 49602, 46449, 90575],
+        "Others": [1855580, 2333722, 2511990, 2443765, 2417832],
+    }
+
+    df = pd.DataFrame(data)
+
+    # Create a stacked bar chart
+    fig = go.Figure()
+
+    # Adding traces for each category
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Holiday'],
+        name='Holiday',
+        marker_color='blue'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Meeting'],
+        name='Meeting',
+        marker_color='orange'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Incentive'],
+        name='Incentive',
+        marker_color='green'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Convention'],
+        name='Convention',
+        marker_color='red'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Exhibitions'],
+        name='Exhibitions',
+        marker_color='purple'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Others'],
+        name='Others',
+        marker_color='cyan'
+    ))
+
+    # Update layout for better visualization
+    fig.update_layout(
+        title='Tourism Revenue by Category (2011-2015)',
+        xaxis_title='Year',
+        yaxis_title='Revenue ($)',
+        barmode='stack',  # Stack bars on top of each other
+        template='plotly_white',  # Clean background
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    data = {
+        "Year": [2011, 2012, 2013, 2014, 2015],
+        "Total": [19230470, 22353903, 26546725, 24809683, 29923185],
+        "Professional": [5498032, 6055463, 7894473, 7771131, 8663256],
+        "Administrative and managerial": [3700513, 4695864, 6283703, 6224513, 6822680],
+        "Commercial personal and clerical": [3308289, 3906600, 3976840, 3419090, 4358252],
+        "Labourers production and service workers": [2920835, 3295804, 3687406, 2970856, 4122125],
+        "Agricultural workers": [130428, 224644, 228569, 173471, 182177],
+        "Government": [64032, 82824, 59764, 76635, 131287],
+        "House wife": [1202114, 1411317, 1387823, 1230005, 1733063],
+        "Students": [2041666, 2324589, 2590935, 2447030, 3341153],
+        "Retired": [356451, 350161, 435460, 495700, 566085],
+        "Others": [8110, 6637, 1752, 1252, 3107],
+    }
+
+    df = pd.DataFrame(data)
+
+    # Create a stacked bar chart
+    fig = go.Figure()
+
+    # Adding traces for each category
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Professional'],
+        name='Professional',
+        marker_color='blue'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Administrative and managerial'],
+        name='Administrative and managerial',
+        marker_color='orange'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Commercial personal and clerical'],
+        name='Commercial personal and clerical',
+        marker_color='green'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Labourers production and service workers'],
+        name='Labourers production and service workers',
+        marker_color='red'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Agricultural workers'],
+        name='Agricultural workers',
+        marker_color='purple'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Government'],
+        name='Government',
+        marker_color='cyan'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['House wife'],
+        name='House wife',
+        marker_color='pink'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Students'],
+        name='Students',
+        marker_color='yellow'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Retired'],
+        name='Retired',
+        marker_color='lightgray'
+    ))
+    fig.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Others'],
+        name='Others',
+        marker_color='brown'
+    ))
+
+    # Update layout for better visualization
+    fig.update_layout(
+        title='Employment by Category (2011-2015)',
+        xaxis_title='Year',
+        yaxis_title='Number of People',
+        barmode='stack',  # Stack bars on top of each other
+        template='plotly_white',  # Clean background
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    data = {
+        "Year": [2011, 2012, 2013, 2014, 2015],
+        "Age Group Under 25 (%)": [12.61, 13.02, 12.5, 11.87, 13.26],
+        "Age Group 25 – 34 (%)": [28.19, 26.54, 27.2, 28.85, 25.88],
+        "Age Group 35 – 44 (%)": [25.2, 24.62, 24.75, 23.07, 22.29],
+        "Age Group 45 – 54 (%)": [19.08, 19.36, 18.49, 19.04, 19.27],
+        "Age Group 55 – 64 (%)": [11.02, 11.65, 11.96, 12.05, 13.28],
+        "Age Group 65 and Over (%)": [3.88, 4.79, 5.07, 5.09, 5.99],
+        "Male (%)": [59.32, 58.36, 56.95, 56.98, 51.65],
+        "Female (%)": [40.68, 41.64, 43.05, 43.02, 48.35],
+    }
+
+    df = pd.DataFrame(data)
+
+    # Create a bar chart for Age Groups
+    fig_age_groups = go.Figure()
+
+    age_groups = [
+        "Age Group Under 25 (%)",
+        "Age Group 25 – 34 (%)",
+        "Age Group 35 – 44 (%)",
+        "Age Group 45 – 54 (%)",
+        "Age Group 55 – 64 (%)",
+        "Age Group 65 and Over (%)"
+    ]
+
+    for age_group in age_groups:
+        fig_age_groups.add_trace(go.Bar(
+            x=df['Year'],
+            y=df[age_group],
+            name=age_group,
+            text=df[age_group],
+            textposition='auto'
+        ))
+
+    # Update layout for age groups
+    fig_age_groups.update_layout(
+        title='Age Group Distribution (2011-2015)',
+        xaxis_title='Year',
+        yaxis_title='Percentage (%)',
+        barmode='group',  # Group bars side by side
+        template='plotly_white',  # Clean background
+    )
+
+    # Show the age groups figure in Streamlit
+    st.plotly_chart(fig_age_groups, use_container_width=True)
+
+    # Create a bar chart for Gender
+    fig_gender = go.Figure()
+
+    # Adding gender data
+    fig_gender.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Male (%)'],
+        name='Male (%)',
+        marker_color='blue',
+        text=df['Male (%)'],
+        textposition='auto'
+    ))
+    fig_gender.add_trace(go.Bar(
+        x=df['Year'],
+        y=df['Female (%)'],
+        name='Female (%)',
+        marker_color='pink',
+        text=df['Female (%)'],
+        textposition='auto'
+    ))
+
+    # Update layout for gender
+    fig_gender.update_layout(
+        title='Gender Distribution (2011-2015)',
+        xaxis_title='Year',
+        yaxis_title='Percentage (%)',
+        barmode='group',  # Group bars side by side
+        template='plotly_white',  # Clean background
+    )
+
+    # Show the gender figure in Streamlit
+    st.plotly_chart(fig_gender, use_container_width=True)
+
+    data = {
+        "Year": [2011, 2012, 2013, 2014, 2015],
+        "Total": [19230470, 22353903, 26546725, 24809683, 29923185],
+        "Hotel": [15992927, 19694995, 23952270, 22281502, 27358046],
+        "Friend's home": [636178, 553976, 489019, 472672, 209856],
+        "Guest house": [686058, 559052, 576105, 470692, 422209],
+        "Youth Hostel": [151155, 128229, 137194, 130565, 475069],
+        "Apartment": [828703, 748157, 736541, 829895, 829798],
+        "Others": [935449, 669494, 655596, 624357, 628207],
+    }
+
+    df = pd.DataFrame(data)
+
+    # Create a bar chart for accommodation types
+    fig_accommodation = go.Figure()
+
+    # Adding accommodation type data
+    accommodation_types = ["Hotel", "Friend's home", "Guest house", "Youth Hostel", "Apartment", "Others"]
+
+    for accommodation in accommodation_types:
+        fig_accommodation.add_trace(go.Bar(
+            x=df['Year'],
+            y=df[accommodation],
+            name=accommodation,
+            text=df[accommodation],
+            textposition='auto'
+        ))
+
+    # Update layout for accommodation types
+    fig_accommodation.update_layout(
+        title='Accommodation Types (2011-2015)',
+        xaxis_title='Year',
+        yaxis_title='Number of Visitors',
+        barmode='group',  # Group bars side by side
+        template='plotly_white',  # Clean background
+    )
+
+    # Show the accommodation types figure in Streamlit
+    st.plotly_chart(fig_accommodation, use_container_width=True)
+
 elif data_choice == "Tourist Expenditure":
-    st.header("Overall Data - 2010 to 2015")
+    st.header("Overall Data (2010-2015)")
     st.dataframe(overall_df, use_container_width=True, hide_index=True)
-    st.header("Tourist Expenditure - 2010 to 2015")
+    st.header("Tourist Expenditure (2010-2015)")
     st.dataframe(expenditure_df, use_container_width=True, hide_index=True)
     # Overall Data Chart for Expenditure
     # Ensure the overall_df DataFrame has the correct structure before this line
@@ -105,6 +379,74 @@ elif data_choice == "Tourist Expenditure":
 
     # Show the figure in Streamlit
     st.plotly_chart(fig, use_container_width=True)
+
+    data = {
+        "Year": [2011, 2012, 2013, 2014, 2015],
+        "Total ($US) / Person per day": [167.82, 172.42, 180.96, 180.54, 184.39],
+        "Accommodation": [41.17, 42.31, 45.18, 45.31, 42.94],
+        "Food and beverage": [25.72, 26.52, 28.66, 29.22, 28.09],
+        "Sight seeing": [5.17, 5.52, 6.02, 5.73, 5.53],
+        "Local transport": [14.24, 14.56, 15.32, 15.25, 14.39],
+        "Shopping": [32.84, 33.82, 35.61, 35.66, 35.13],
+        "Entertainment": [15.99, 16.86, 17.61, 17.16, 16.52],
+        "Miscellaneous": [2.15, 2.14, 2.00, 1.90, 1.96],
+        "Medical Care": [30.54, 30.69, 30.56, 30.31, 39.82],
+    }
+
+    df = pd.DataFrame(data)
+
+    # Create a bar chart for expenditure categories
+    fig_expenditure = go.Figure()
+
+    # Adding expenditure category data
+    expenditure_categories = ["Accommodation", "Food and beverage", "Sight seeing",
+                              "Local transport", "Shopping", "Entertainment",
+                              "Miscellaneous", "Medical Care"]
+
+    for category in expenditure_categories:
+        fig_expenditure.add_trace(go.Bar(
+            x=df['Year'],
+            y=df[category],
+            name=category,
+            text=df[category],
+            textposition='auto'
+        ))
+
+    # Update layout for expenditure categories
+    fig_expenditure.update_layout(
+        title='Expenditure Categories per Person per Day (2011-2015)',
+        xaxis_title='Year',
+        yaxis_title='Amount in $US',
+        barmode='group',  # Group bars side by side
+        template='plotly_white',  # Clean background
+    )
+
+    # Show the expenditure figure in Streamlit
+    st.plotly_chart(fig_expenditure, use_container_width=True)
+
+    # Stacked Bar Chart for Expenditure Categories
+    fig_stacked = go.Figure()
+
+    for category in expenditure_categories:
+        fig_stacked.add_trace(go.Bar(
+            x=df['Year'],
+            y=df[category],
+            name=category,
+            text=df[category],
+            textposition='inside'
+        ))
+
+    # Update layout for stacked bar chart
+    fig_stacked.update_layout(
+        title='Total Expenditure Categories per Person per Day (Stacked)',
+        xaxis_title='Year',
+        yaxis_title='Amount in $US',
+        barmode='stack',  # Stack bars on top of each other
+        template='plotly_white',  # Clean background
+    )
+
+    # Show the stacked figure in Streamlit
+    st.plotly_chart(fig_stacked, use_container_width=True)
 
 elif data_choice == "Weather Patterns":
     st.header("Weather Patterns")
@@ -194,50 +536,50 @@ data = pd.DataFrame({
     'GDP Growth (%)': economic_df['GDP Growth (%)']
 })
 
-# Model Training
-st.header("Visitor Arrivals Prediction")
-train = data[data['Year'] < 2015]
-test = data[data['Year'] >= 2015]
-X_train = train.drop(columns=['Visitor Arrivals', 'Year'])
-y_train = train['Visitor Arrivals']
-X_test = test.drop(columns=['Visitor Arrivals', 'Year'])
-y_test = test['Visitor Arrivals']
-
-rf_model = RandomForestRegressor(n_estimators=100, random_state=0)
-rf_model.fit(X_train, y_train)
-
-predictions = rf_model.predict(X_test)
-mae = mean_absolute_error(y_test, predictions)
-st.write("Mean Absolute Error for Visitor Predictions:", mae)
-
-# Plot the predictions
-fig, ax = plt.subplots()
-ax.plot(data['Year'], data['Visitor Arrivals'], label='Actual Visitors')
-ax.plot(test['Year'], predictions, label='Predicted Visitors', linestyle='--')
-ax.set_xlabel('Year')
-ax.set_ylabel('Visitor Arrivals')
-ax.set_title('Visitor Arrivals Prediction')
-ax.legend()
-st.pyplot(fig)
-
-# Expenditure Forecast using ARIMA
-st.header("Expenditure Forecast")
-expenditure_model = ARIMA(avg_expenditure, order=(1, 1, 1))
-expenditure_fit = expenditure_model.fit()
-expenditure_forecast = expenditure_fit.forecast(steps=3)  # Predict for 2016-2018
-st.write("Expenditure Forecast for 2016-2018:")
-st.write(expenditure_forecast)
-
-# Plot expenditure forecast
-forecast_years = [2016, 2017, 2018]
-fig, ax = plt.subplots()
-ax.plot(data['Year'], data['Average Expenditure'], label='Actual Expenditure')
-ax.plot(forecast_years, expenditure_forecast, label='Forecast Expenditure', linestyle='--')
-ax.set_xlabel('Year')
-ax.set_ylabel('Average Expenditure ($US per day)')
-ax.set_title('Expenditure Forecast')
-ax.legend()
-st.pyplot(fig)
+# # Model Training
+# st.header("Visitor Arrivals Prediction")
+# train = data[data['Year'] < 2015]
+# test = data[data['Year'] >= 2015]
+# X_train = train.drop(columns=['Visitor Arrivals', 'Year'])
+# y_train = train['Visitor Arrivals']
+# X_test = test.drop(columns=['Visitor Arrivals', 'Year'])
+# y_test = test['Visitor Arrivals']
+#
+# rf_model = RandomForestRegressor(n_estimators=100, random_state=0)
+# rf_model.fit(X_train, y_train)
+#
+# predictions = rf_model.predict(X_test)
+# mae = mean_absolute_error(y_test, predictions)
+# st.write("Mean Absolute Error for Visitor Predictions:", mae)
+#
+# # Plot the predictions
+# fig, ax = plt.subplots()
+# ax.plot(data['Year'], data['Visitor Arrivals'], label='Actual Visitors')
+# ax.plot(test['Year'], predictions, label='Predicted Visitors', linestyle='--')
+# ax.set_xlabel('Year')
+# ax.set_ylabel('Visitor Arrivals')
+# ax.set_title('Visitor Arrivals Prediction')
+# ax.legend()
+# st.pyplot(fig)
+#
+# # Expenditure Forecast using ARIMA
+# st.header("Expenditure Forecast")
+# expenditure_model = ARIMA(avg_expenditure, order=(1, 1, 1))
+# expenditure_fit = expenditure_model.fit()
+# expenditure_forecast = expenditure_fit.forecast(steps=3)  # Predict for 2016-2018
+# st.write("Expenditure Forecast for 2016-2018:")
+# st.write(expenditure_forecast)
+#
+# # Plot expenditure forecast
+# forecast_years = [2016, 2017, 2018]
+# fig, ax = plt.subplots()
+# ax.plot(data['Year'], data['Average Expenditure'], label='Actual Expenditure')
+# ax.plot(forecast_years, expenditure_forecast, label='Forecast Expenditure', linestyle='--')
+# ax.set_xlabel('Year')
+# ax.set_ylabel('Average Expenditure ($US per day)')
+# ax.set_title('Expenditure Forecast')
+# ax.legend()
+# st.pyplot(fig)
 
 # Footer
 st.markdown("---")  # This creates a horizontal line
