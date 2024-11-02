@@ -1,6 +1,10 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from matplotlib import pyplot as plt
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
+from statsmodels.tsa.arima.model import ARIMA
 
 # Set up the page
 st.set_page_config(page_title="WaveTour Pro - Tourism Predictor", layout="wide")
@@ -424,7 +428,6 @@ elif data_choice == "Tourist Expenditure":
     # Show the expenditure figure in Streamlit
     st.plotly_chart(fig_expenditure, use_container_width=True)
 
-    # Stacked Bar Chart for Expenditure Categories
     fig_stacked = go.Figure()
 
     for category in expenditure_categories:
