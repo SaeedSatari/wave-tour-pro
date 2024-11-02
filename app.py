@@ -98,6 +98,58 @@ elif data_choice == "Tourist Expenditure":
 elif data_choice == "Weather Patterns":
     st.header("Weather Patterns")
     st.dataframe(weather_df, use_container_width=True, hide_index=True)
+    # Create a Plotly figure for visitor arrivals and expenditure
+    fig = go.Figure()
+
+    # Add bar trace for the number of visitors
+    fig.add_trace(go.Bar(
+        x=weather_df['Year'],
+        y=weather_df['Average Temperature (°C)'],
+        name='Average Temperature',
+        marker_color='orange',
+        yaxis='y1'  # Use the first y-axis
+    ))
+
+    # Add line trace for the expenditure
+    fig.add_trace(go.Scatter(
+        x=weather_df['Year'],
+        y=weather_df['Rainfall (mm)'],
+        mode='lines+markers',
+        name='Rainfall',
+        line=dict(color='skyblue', width=2),
+        marker=dict(size=8),
+        yaxis='y2'  # Use the second y-axis
+    ))
+
+    # Update layout for dual axes
+    fig.update_layout(
+        title='Weather Patterns Over the Years',
+        xaxis_title='Year',
+        yaxis_title='Average Temperature (°C)',
+        yaxis=dict(
+            title='Average Temperature (°C)',
+            side='left',
+            showgrid=True,
+            zeroline=False,
+            titlefont=dict(color='orange'),
+            tickfont=dict(color='orange')
+        ),
+        yaxis2=dict(
+            title='Rainfall (mm)',
+            overlaying='y',
+            side='right',
+            showgrid=False,
+            zeroline=False,
+            titlefont=dict(color='skyblue'),
+            tickfont=dict(color='skyblue')
+        ),
+        xaxis=dict(tickvals=weather_df['Year']),  # Ensure all years are shown
+        template='plotly_white',  # A clean white background
+        hovermode='x unified'  # Show hover info for all traces at the same x-value
+    )
+
+    # Show the figure in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
 else:
     st.header("Economic Indicators")
     st.dataframe(economic_df, use_container_width=True, hide_index=True)
