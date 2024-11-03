@@ -1,6 +1,8 @@
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from matplotlib import pyplot as plt
+from statsmodels.tsa.arima.model import ARIMA
 
 # Set up the page
 st.set_page_config(page_title="WaveTour Pro - Tourism Predictor", layout="wide")
@@ -588,8 +590,14 @@ expenditure_df['Total ($US) / Person per day'] = pd.to_numeric(expenditure_df['T
 # Handle NaNs (fill with 0, drop them, or use other strategies)
 expenditure_df['Total ($US) / Person per day'].fillna(0, inplace=True)
 
+total_expenditure = expenditure_df.groupby('Year')['Total ($US) / Person per day'].sum()
+
 # Now perform the groupby operation
-avg_expenditure = expenditure_df.groupby('Year')['Total ($US) / Person per day'].mean()
+avg_expenditure = total_expenditure / expenditure_df.groupby('Year')['Total ($US) / Person per day'].count()
+avg_expenditure = avg_expenditure.round(2)
+
+for year, value in avg_expenditure.items():  # Using items() for iterating over the Series
+    print(f"{year}\t{value:,.2f}")
 
 data = pd.DataFrame({
     'Year': visitor_totals.index,
@@ -626,24 +634,43 @@ data = pd.DataFrame({
 # ax.legend()
 # st.pyplot(fig)
 #
-# # Expenditure Forecast using ARIMA
-# st.header("Expenditure Forecast")
-# expenditure_model = ARIMA(avg_expenditure, order=(1, 1, 1))
-# expenditure_fit = expenditure_model.fit()
-# expenditure_forecast = expenditure_fit.forecast(steps=3)  # Predict for 2016-2018
-# st.write("Expenditure Forecast for 2016-2018:")
-# st.write(expenditure_forecast)
-#
-# # Plot expenditure forecast
-# forecast_years = [2016, 2017, 2018]
-# fig, ax = plt.subplots()
-# ax.plot(data['Year'], data['Average Expenditure'], label='Actual Expenditure')
-# ax.plot(forecast_years, expenditure_forecast, label='Forecast Expenditure', linestyle='--')
-# ax.set_xlabel('Year')
-# ax.set_ylabel('Average Expenditure ($US per day)')
-# ax.set_title('Expenditure Forecast')
-# ax.legend()
-# st.pyplot(fig)
+# Expenditure Forecast
+st.header("Expenditure Forecast")
+expenditure_model = ARIMA(avg_expenditure, order=(1, 1, 1))
+expenditure_fit = expenditure_model.fit()
+expenditure_forecast = expenditure_fit.forecast(steps=3)  # Predict for 2016-2018
+
+# Display the forecast values
+st.write("Expenditure Forecast for 2016-2018:")
+forecast_years = [2016, 2017, 2018]
+forecast_data = pd.DataFrame({'Year': forecast_years, 'Forecasted Expenditure': expenditure_forecast})
+
+# Display forecasted data in a table
+st.table(forecast_data)
+
+# Create an advanced chart using Plotly
+fig = go.Figure()
+
+# Forecast expenditure trace
+fig.add_trace(go.Scatter(
+    x=forecast_years,
+    y=expenditure_forecast,
+    mode='lines+markers',
+    name='Forecast Expenditure',
+    line=dict(color='orange', dash='dash'),
+))
+
+# Update layout
+fig.update_layout(
+    title='Expenditure Forecast',
+    xaxis_title='Year',
+    yaxis_title='Average Expenditure ($US per day)',
+    legend_title='Legend',
+    template='plotly_white'
+)
+
+st.plotly_chart(fig)
+
 
 # Footer
 st.markdown("---")  # This creates a horizontal line
